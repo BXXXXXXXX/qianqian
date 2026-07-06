@@ -1,0 +1,17 @@
+export type WorkspaceSummary = {
+  todaySuggestion: string;
+  savingTime: string;
+  recentEvents: WorkspaceEvent[];
+  progress: {
+    label: string;
+    value: string;
+    caption: string;
+  };
+};
+
+export type WorkspaceEvent = {
+  id: string;
+  title: string;
+  childName: string;
+  timeLabel: string;
+};
