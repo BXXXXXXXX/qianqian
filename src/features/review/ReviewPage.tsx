@@ -38,14 +38,16 @@ export function ReviewPage() {
   return (
     <div className="space-y-[var(--space-6)]">
       <header className="space-y-[var(--space-2)]">
-        <p className="text-[0.85rem] font-semibold uppercase leading-none text-primary">Review</p>
+        <p className="text-[0.85rem] font-semibold uppercase leading-none text-primary">Communication Assistant</p>
         <div className="space-y-[var(--space-1)]">
           <h1 className="text-[1.75rem] font-semibold leading-tight text-ink">{data.title}</h1>
-          <p className="text-[0.95rem] leading-relaxed text-ink-muted">确认前只展示 Mock 草稿，不接入 AI。</p>
+          <p className="text-[0.95rem] leading-relaxed text-ink-muted">
+            老师只提供事实，系统整理成草稿，最后由老师确认。
+          </p>
         </div>
       </header>
 
-      <Section title="Source">
+      <Section title="Source Fact">
         <Card className="shadow-none">
           <p className="text-[0.95rem] leading-relaxed text-ink">{data.sourceText}</p>
         </Card>
@@ -57,7 +59,7 @@ export function ReviewPage() {
         </Card>
       </Section>
 
-      <Section title="Draft">
+      <Section title="Draft Output">
         <Card>
           <p className="text-[0.95rem] leading-relaxed text-ink">{data.parentDraft}</p>
         </Card>

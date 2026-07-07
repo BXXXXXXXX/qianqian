@@ -16,10 +16,12 @@ export function ChildrenPage() {
   return (
     <div className="space-y-[var(--space-6)]">
       <header className="space-y-[var(--space-2)]">
-        <p className="text-[0.85rem] font-semibold uppercase leading-none text-primary">Classroom</p>
+        <p className="text-[0.85rem] font-semibold uppercase leading-none text-primary">Growth Memory</p>
         <div className="space-y-[var(--space-1)]">
           <h1 className="text-[1.75rem] font-semibold leading-tight text-ink">Children</h1>
-          <p className="text-[0.95rem] leading-relaxed text-ink-muted">儿童列表和档案入口。</p>
+          <p className="text-[0.95rem] leading-relaxed text-ink-muted">
+            无感形成档案，老师不必先建档，记录会自然长成可编辑的成长记忆。
+          </p>
         </div>
       </header>
 
