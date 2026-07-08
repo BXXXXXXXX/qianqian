@@ -1,0 +1,751 @@
+好的，我们正式进入**工程阶段**。
+
+从现在开始，我会改变输出方式：
+
+之前：
+
+> 帮 Codex 理解我们为什么做。
+
+现在：
+
+> 告诉 Codex 怎么开始写。
+
+---
+
+# KTOS RFC-001
+
+# Engineering Blueprint（工程蓝图）
+
+```text
+Version: V1.0
+Status: Draft → Review
+Owner: KTOS Core Team
+
+Purpose:
+指导 Codex 开始构建 KTOS V1 MVP
+```
+
+---
+
+# 0. 工程目标（Engineering Goal）
+
+## 30 天目标
+
+不是做完整 KTOS。
+
+不是做未来所有 AI 能力。
+
+第一版只验证：
+
+> 老师是否愿意每天打开 KTOS，并通过语音记录，让 AI 帮她减少文书工作。
+
+---
+
+# MVP 核心闭环
+
+必须跑通：
+
+```text
+Teacher
+
+↓
+
+打开 APP
+
+↓
+
+语音记录
+
+↓
+
+AI 理解
+
+↓
+
+生成 Fact
+
+↓
+
+形成 Timeline
+
+↓
+
+生成日报/家长沟通
+
+↓
+
+老师确认
+
+↓
+
+节省时间
+```
+
+如果这个闭环不能运行。
+
+其他功能全部没有意义。
+
+---
+
+# 1. 第一版技术架构
+
+## 总体架构
+
+```text
+                 Mobile App
+
+                    |
+
+              API Gateway
+
+                    |
+
+              Backend Core
+
+                    |
+
+ ┌────────────────────────────────┐
+
+ Observation Engine
+
+ Understanding Engine
+
+ Fact Engine
+
+ Timeline Engine
+
+ Report Engine
+
+ └────────────────────────────────┘
+
+                    |
+
+              Data Layer
+
+                    |
+
+ PostgreSQL + Vector Storage
+
+                    |
+
+              LLM Provider
+```
+
+---
+
+# 2. V1 技术原则
+
+## Principle 001
+
+先简单。
+
+不要过度架构。
+
+V1 不需要：
+
+* 微服务
+* Kubernetes
+* 消息队列集群
+* 多模型调度
+
+---
+
+建议：
+
+## Backend
+
+选择：
+
+* FastAPI / Spring Boot（二选一）
+
+原则：
+
+模块化。
+
+方便未来拆分。
+
+---
+
+## Database
+
+推荐：
+
+PostgreSQL。
+
+原因：
+
+需要：
+
+* JSON
+* 时间查询
+* 关系查询
+* 向量扩展
+
+---
+
+## AI
+
+第一版：
+
+单模型。
+
+不要同时接：
+
+GPT
+
+Claude
+
+Qwen
+
+Gemini
+
+---
+
+先验证：
+
+产品闭环。
+
+---
+
+# 3. Repository 设计
+
+Codex 创建：
+
+```text
+ktos/
+
+├── apps/
+
+│
+├── mobile/
+│
+└── backend/
+
+
+├── packages/
+
+│
+├── domain/
+│
+├── ai/
+│
+└── shared/
+
+
+├── database/
+
+│
+├── migrations/
+│
+└── schema/
+
+
+├── prompts/
+
+│
+├── observation/
+│
+├── fact/
+│
+├── report/
+│
+└── memory/
+
+
+├── docs/
+
+│
+├── rfc/
+│
+└── design/
+
+
+└── README.md
+```
+
+---
+
+# 4. Backend Domain
+
+不要按照页面设计。
+
+按照业务能力设计。
+
+---
+
+目录：
+
+```text
+domain/
+
+├── teacher
+
+├── student
+
+├── observation
+
+├── fact
+
+├── timeline
+
+├── report
+
+└── copilot
+```
+
+---
+
+# 5. V1 核心模块
+
+## Module 001
+
+# Observation Engine
+
+职责：
+
+接收老师输入。
+
+输入：
+
+```json
+{
+"type":"voice",
+"content":"今天小宇晨检咳嗽"
+}
+```
+
+输出：
+
+Raw Observation。
+
+---
+
+数据库：
+
+```sql
+observation
+
+id
+
+teacher_id
+
+content
+
+type
+
+created_at
+```
+
+---
+
+# Module 002
+
+# Understanding Engine
+
+职责：
+
+理解老师表达。
+
+输入：
+
+Observation。
+
+输出：
+
+结构化事件。
+
+例如：
+
+```json
+{
+"student":"小宇",
+"event":"health",
+"description":"咳嗽",
+"time":"上午"
+}
+```
+
+注意：
+
+这里不是 Fact。
+
+只是理解结果。
+
+---
+
+# Module 003
+
+# Fact Engine
+
+核心模块。
+
+输入：
+
+Understanding。
+
+输出：
+
+Fact。
+
+Schema：
+
+```sql
+fact
+
+id
+
+teacher_id
+
+student_id
+
+event_type
+
+description
+
+occurred_at
+
+source
+
+confidence
+
+status
+
+created_at
+```
+
+---
+
+状态：
+
+```text
+PENDING
+
+CONFIRMED
+
+REJECTED
+```
+
+---
+
+# Module 004
+
+# Timeline Engine
+
+作用：
+
+把 Fact 排序。
+
+例如：
+
+```text
+08:10
+小宇晨检咳嗽
+
+10:30
+户外活动
+
+13:20
+午睡情况
+```
+
+数据库：
+
+```sql
+timeline_event
+
+id
+
+fact_id
+
+occurred_at
+```
+
+---
+
+# Module 005
+
+# Report Engine
+
+V1 最重要价值。
+
+输入：
+
+Timeline。
+
+输出：
+
+日报。
+
+例如：
+
+```text
+今日班级情况：
+
+1.
+孩子活动情况
+
+2.
+特殊关注
+
+3.
+需要沟通事项
+```
+
+---
+
+必须：
+
+老师确认。
+
+---
+
+# Module 006
+
+# Inbox Engine
+
+首页核心。
+
+数据来源：
+
+Timeline
+
+Report
+
+Pending Task
+
+返回：
+
+```json
+{
+"today_records":10,
+
+"draft_report":true,
+
+"suggestions":[]
+}
+```
+
+---
+
+# 6. V1 暂时不开发
+
+明确冻结：
+
+## ❌ Memory Engine
+
+原因：
+
+虽然重要。
+
+但是需要真实数据。
+
+先让 Fact 累积。
+
+---
+
+## ❌ Knowledge Engine
+
+需要长期行为。
+
+---
+
+## ❌ Workflow Engine
+
+需要观察老师习惯。
+
+---
+
+## ❌ 自动提醒
+
+没有数据基础。
+
+---
+
+## ❌ 自动时间轴
+
+先人工验证。
+
+---
+
+## ❌ 多老师协作
+
+后续。
+
+---
+
+# 7. 第一版用户流程
+
+Codex 必须实现：
+
+---
+
+## Flow 001
+
+首次打开
+
+↓
+
+创建老师账户
+
+↓
+
+选择班级
+
+↓
+
+进入 Inbox
+
+---
+
+## Flow 002
+
+开始工作
+
+点击：
+
+开始今天工作
+
+↓
+
+进入语音模式
+
+---
+
+## Flow 003
+
+记录
+
+按住按钮。
+
+说：
+
+"今天小宇有点咳嗽"
+
+↓
+
+AI整理
+
+↓
+
+老师确认
+
+↓
+
+保存 Fact
+
+---
+
+## Flow 004
+
+下午
+
+打开 Inbox
+
+看到：
+
+"今日记录已整理"
+
+↓
+
+生成日报
+
+↓
+
+确认
+
+---
+
+# 8. Definition of Done
+
+一个模块完成。
+
+必须满足：
+
+不是：
+
+代码写完。
+
+而是：
+
+用户闭环完成。
+
+---
+
+例如 Fact Engine 完成：
+
+必须：
+
+✅ 老师输入语音
+
+✅ AI理解
+
+✅ 生成Fact
+
+✅ 老师确认
+
+✅ 数据保存
+
+✅ Timeline显示
+
+---
+
+# 9. Codex 第一周任务
+
+## Day 1
+
+项目初始化。
+
+完成：
+
+* Repo
+* Docker
+* Database
+* README
+
+---
+
+## Day 2
+
+完成：
+
+Teacher
+
+Student
+
+Observation
+
+---
+
+## Day 3
+
+完成：
+
+AI理解接口
+
+Fact Engine
+
+---
+
+## Day 4
+
+完成：
+
+Timeline
+
+Inbox API
+
+---
+
+## Day 5
+
+完成：
+
+日报生成
+
+---
+
+## Day 6-7
+
+内部测试。
+
+---

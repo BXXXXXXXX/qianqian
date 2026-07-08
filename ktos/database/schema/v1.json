@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "activeLoop": [
+    "observation",
+    "understanding",
+    "fact",
+    "timeline",
+    "report"
+  ],
+  "frozenForV1": [
+    "memory",
+    "knowledge",
+    "workflow",
+    "automation"
+  ],
+  "confirmationPolicy": {
+    "fact": "PENDING facts require teacher confirmation before official timeline use.",
+    "report": "Report drafts require teacher confirmation before external use."
+  }
+}

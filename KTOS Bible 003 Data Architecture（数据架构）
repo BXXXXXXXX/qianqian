@@ -1,0 +1,891 @@
+很好，我认为**KTOS Bible 003**是整个项目最重要的技术文档。
+
+前两份文档解决了：
+
+> 为什么做（Why）
+
+> 系统如何运行（How）
+
+这一份解决：
+
+> **整个系统到底保存什么（What）**
+
+我希望 Codex 看完这一份以后，**不用再问数据库怎么设计。**
+
+---
+
+# KTOS Bible 003
+
+# Data Architecture（数据架构）
+
+```text
+Version : V1.0
+Status  : Frozen
+Priority: Highest
+```
+
+> 数据不是为了存储。
+>
+> 数据是为了让 AI 理解老师，而不是让老师重复输入。
+
+---
+
+# 第一章 数据哲学（Data Philosophy）
+
+KTOS 不以聊天记录(Chat History)作为核心数据。
+
+而是采用五层数据体系。
+
+```text
+Conversation
+        │
+        ▼
+Fact
+        │
+        ▼
+Memory
+        │
+        ▼
+Knowledge
+        │
+        ▼
+Workflow
+```
+
+这是整个数据库唯一的数据流。
+
+禁止跨层引用。
+
+---
+
+# 第二章 Conversation Layer
+
+作用：
+
+保存本次聊天。
+
+默认生命周期：
+
+Session。
+
+默认：
+
+不进入长期数据库。
+
+例如
+
+```text
+老师：
+
+今天小宇一直咳嗽。
+
+老师：
+
+下午精神好多了。
+```
+
+这些都是 Conversation。
+
+Conversation 可以删除。
+
+Conversation 默认遗忘。
+
+字段：
+
+```text
+Conversation
+
+id
+
+teacher_id
+
+session_id
+
+speaker
+
+content
+
+voice_url
+
+created_at
+
+expire_at
+```
+
+注意：
+
+Conversation 不是 AI Memory。
+
+---
+
+# 第三章 Fact Layer
+
+Fact 是整个 KTOS 的核心。
+
+Fact 必须满足：
+
+> 可验证。
+
+> 可追溯。
+
+> 可确认。
+
+例如：
+
+```text
+Fact
+
+id
+
+student_id
+
+teacher_id
+
+class_id
+
+event_type
+
+action
+
+description
+
+occurred_at
+
+recorded_at
+
+source
+
+confidence
+
+confirm_status
+
+tags
+
+created_by
+```
+
+例如：
+
+```text
+Event
+
+午睡
+
+Action
+
+入睡较慢
+
+OccurredAt
+
+13:05
+```
+
+Fact 永远保存。
+
+不会被 AI 修改。
+
+---
+
+# 第四章 Timeline
+
+Timeline。
+
+不是数据库。
+
+它是：
+
+Fact 的排序视图。
+
+例如：
+
+```text
+08:10
+
+晨检
+
+↓
+
+09:00
+
+区域活动
+
+↓
+
+09:45
+
+喝水
+
+↓
+
+10:20
+
+户外
+
+↓
+
+11:40
+
+午餐
+```
+
+日报。
+
+周报。
+
+全部来自 Timeline。
+
+Timeline 永远引用 Fact。
+
+不保存副本。
+
+---
+
+# 第五章 Memory Layer
+
+Memory。
+
+来自：
+
+多个 Fact。
+
+例如：
+
+```text
+Fact
+
+连续五天。
+
+下午统一整理日报。
+```
+
+形成：
+
+```text
+Memory
+
+老师喜欢下午整理日报。
+```
+
+字段：
+
+```text
+Memory
+
+id
+
+teacher_id
+
+type
+
+summary
+
+confidence
+
+frequency
+
+recency
+
+consistency
+
+confirm_count
+
+status
+
+created_at
+
+updated_at
+```
+
+状态：
+
+```text
+ACTIVE
+
+DISABLED
+
+ARCHIVED
+```
+
+老师拥有：
+
+启用。
+
+关闭。
+
+删除。
+
+恢复。
+
+全部权限。
+
+---
+
+# 第六章 Knowledge Layer
+
+Knowledge。
+
+来自：
+
+多个 Memory。
+
+不是 AI 自动生成。
+
+必须：
+
+老师确认。
+
+例如：
+
+```text
+Memory
+
+喜欢下午整理。
+
+喜欢一次确认。
+
+喜欢微信简洁。
+```
+
+形成：
+
+```text
+Knowledge
+
+工作风格：
+
+下午统一整理。
+
+沟通简洁。
+
+一次确认。
+```
+
+字段：
+
+```text
+Knowledge
+
+id
+
+teacher_id
+
+title
+
+description
+
+source_memories
+
+confidence
+
+confirm_status
+
+version
+
+created_at
+```
+
+Knowledge 永远属于老师。
+
+---
+
+# 第七章 Workflow Layer
+
+Workflow。
+
+不是流程图。
+
+而是：
+
+老师真正每天工作的方式。
+
+例如：
+
+```text
+放学
+
+↓
+
+整理事实
+
+↓
+
+日报
+
+↓
+
+微信
+
+↓
+
+下班
+```
+
+字段：
+
+```text
+Workflow
+
+id
+
+teacher_id
+
+title
+
+steps
+
+trigger
+
+estimate_time
+
+saved_time
+
+confidence
+
+active
+```
+
+AI：
+
+只能建议。
+
+不能自动执行。
+
+---
+
+# 第八章 Teacher Asset
+
+老师资产。
+
+可以迁移。
+
+可以导出。
+
+例如：
+
+```text
+Preference
+
+Workflow
+
+Knowledge
+
+Memory
+
+Copilot Profile
+
+Prompt
+
+Voice Style
+
+Communication Style
+```
+
+以后。
+
+老师换幼儿园。
+
+全部带走。
+
+---
+
+# 第九章 Organization Asset
+
+属于园所。
+
+不能默认迁移。
+
+例如：
+
+```text
+Student
+
+Parent
+
+Class
+
+Attendance
+
+Growth Record
+
+Notice
+
+School Config
+```
+
+老师离职。
+
+默认保留。
+
+由园所管理。
+
+---
+
+# 第十章 Student Profile
+
+学生档案。
+
+采用：
+
+无感建档。
+
+老师不用专门录入。
+
+而是：
+
+Fact 自动补充。
+
+例如：
+
+```text
+Student
+
+↓
+
+Fact++
+
+↓
+
+Fact++
+
+↓
+
+Fact++
+
+↓
+
+Profile 自动成长
+```
+
+Profile：
+
+永远可编辑。
+
+AI：
+
+不能自动修改。
+
+只能建议。
+
+---
+
+# 第十一章 Tag System
+
+Tag。
+
+不是关键词。
+
+而是：
+
+AI 推理基础。
+
+例如：
+
+```text
+Emotion
+
+Health
+
+Meal
+
+Sleep
+
+Safety
+
+Communication
+
+Parent
+
+Learning
+
+Behavior
+```
+
+以后：
+
+Knowledge。
+
+Workflow。
+
+全部引用 Tag。
+
+---
+
+# 第十二章 Confidence
+
+所有 AI 数据。
+
+都有：
+
+Confidence。
+
+例如：
+
+```text
+Fact
+
+95%
+
+Memory
+
+88%
+
+Knowledge
+
+97%
+```
+
+AI：
+
+永远解释：
+
+为什么。
+
+而不是：
+
+直接说：
+
+我知道。
+
+---
+
+# 第十三章 Relationship
+
+```text
+Teacher
+
+│
+
+├────Conversation
+
+│
+
+├────Fact
+
+│
+
+├────Memory
+
+│
+
+├────Knowledge
+
+│
+
+├────Workflow
+
+│
+
+└────Preference
+
+Student
+
+│
+
+└────Fact
+
+Class
+
+│
+
+└────Student
+```
+
+整个数据库：
+
+Teacher 为中心。
+
+不是：
+
+Student 为中心。
+
+这是 KTOS 与传统园务系统最大的区别。
+
+---
+
+# 第十四章 生命周期（Life Cycle）
+
+```text
+Conversation
+
+↓
+
+Fact
+
+↓
+
+Timeline
+
+↓
+
+Memory
+
+↓
+
+Knowledge
+
+↓
+
+Workflow
+
+↓
+
+Copilot
+```
+
+任何数据。
+
+必须遵守生命周期。
+
+禁止跳层。
+
+---
+
+# 第十五章 Memory Ranking（记忆排序）
+
+Memory 不采用固定权重。
+
+采用动态评分：
+
+```text
+Score
+
+=
+
+Frequency
+
++
+
+Recency
+
++
+
+Consistency
+
++
+
+Teacher Confirmation
+```
+
+以后：
+
+AI Retrieval。
+
+全部依据：
+
+Score。
+
+不是：
+
+创建时间。
+
+---
+
+# 第十六章 数据安全原则
+
+所有数据。
+
+必须能够回答：
+
+```text
+来源是谁？
+
+什么时候产生？
+
+谁确认？
+
+为什么进入 Memory？
+
+为什么形成 Knowledge？
+
+为什么 AI 今天引用它？
+```
+
+如果无法回答。
+
+禁止进入长期数据。
+
+---
+
+# 第十七章 Codex 开发规范
+
+数据库不要先设计几十张复杂表。
+
+建议按领域驱动（DDD）拆分模块：
+
+```text
+core/
+ ├── observation/
+ ├── understanding/
+ ├── fact/
+ ├── timeline/
+ ├── memory/
+ ├── knowledge/
+ ├── workflow/
+ ├── copilot/
+
+domain/
+ ├── teacher/
+ ├── student/
+ ├── organization/
+
+infrastructure/
+ ├── database/
+ ├── llm/
+ ├── vector/
+ ├── eventbus/
+```
+
+先实现最小闭环：
+
+**Conversation → Fact → Timeline → 日报生成。**
+
+等闭环稳定后，再加入 Memory、Knowledge 和 Workflow。
+
+---
+
+# 第一阶段（30 天）建议开发范围（MVP）
+
+这是我建议 Codex **严格控制范围** 的第一版：
+
+✅ 登录与老师身份
+
+✅ Today's Inbox
+
+✅ 语音/文字记录
+
+✅ Observation Engine
+
+✅ Understanding Engine
+
+✅ Fact Engine
+
+✅ Timeline
+
+✅ AI 生成家长沟通（需老师确认）
+
+✅ AI 生成日报（需老师确认）
+
+✅ 学生无感建档（Fact 驱动）
+
+❌ 暂不开发：
+
+* Workflow 学习
+* Knowledge 自动结晶
+* 社区工作流
+* Teacher Digital Twin
+* 多园所同步
+* 高级统计分析
+
+---
+
+## 下一份文档（KTOS Bible 004）
+
+我建议开始写 **Product Experience（产品体验设计）**。
+
+这是整个项目最容易被忽略、但最决定产品成败的一份文档。
+
+它将完整描述：
+
+> **老师第一次打开 KTOS 的前 5 分钟，到第一天结束的完整体验。**
+
+我认为，这份文档将直接决定老师是否愿意第二天继续打开我们的产品，也是 Alpha 测试最需要验证的内容。

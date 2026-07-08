@@ -1,0 +1,767 @@
+很好，我认为 **KTOS Bible 002** 才是真正让 Codex 能开始开发的文档。
+
+如果第一份文档回答的是：
+
+> **为什么做？（Why）**
+
+那么第二份文档回答的是：
+
+> **整个系统是怎么思考的？（How）**
+
+这一份文档以后就是整个项目唯一的系统架构。
+
+---
+
+# KTOS Bible 002
+
+# System Architecture（系统架构）
+
+**Version**
+
+```text
+V1.0
+Status：Frozen
+Priority：Highest
+```
+
+---
+
+# 一、设计思想
+
+KTOS 不是聊天机器人。
+
+KTOS 是一套持续运行的协作操作系统（Human × AI Collaboration OS）。
+
+它不是回答老师的问题。
+
+而是持续理解老师的一天。
+
+整个系统围绕一个思想设计：
+
+> **Observation → Understanding → Fact → Memory → Knowledge → Workflow → Copilot**
+
+整个系统所有代码，都必须围绕这个流程运行。
+
+任何模块都不能绕过它。
+
+---
+
+# 二、整体架构
+
+```text
+                    Teacher
+
+                       │
+
+          Voice / Text / Click
+
+                       │
+
+────────────────────────────────────
+
+        Observation Engine
+      （观察老师输入）
+
+                       │
+
+────────────────────────────────────
+
+       Understanding Engine
+      （理解真正发生了什么）
+
+                       │
+
+────────────────────────────────────
+
+            Fact Engine
+       （形成客观事实）
+
+                       │
+
+────────────────────────────────────
+
+          Timeline Engine
+      （放入当天时间轴）
+
+                       │
+
+────────────────────────────────────
+
+          Memory Engine
+     （形成长期可复用记忆）
+
+                       │
+
+────────────────────────────────────
+
+Knowledge Crystallization Engine
+        （经验沉淀）
+
+                       │
+
+────────────────────────────────────
+
+        Workflow Engine
+    （预测下一步工作）
+
+                       │
+
+────────────────────────────────────
+
+          Copilot Engine
+ （主动准备，不主动执行）
+
+                       │
+
+────────────────────────────────────
+
+ Today's Inbox / Report / Reminder
+```
+
+整个系统只有一个方向。
+
+不允许跳层。
+
+---
+
+# 三、Observation Engine
+
+职责：
+
+记录老师表达。
+
+它不理解。
+
+不推理。
+
+不判断。
+
+它只是：
+
+采集。
+
+例如：
+
+```text
+老师说：
+
+今天晨检的时候小宇一直咳嗽。
+
+```
+
+Observation：
+
+```text
+Raw Input
+
+Voice
+
+Timestamp
+
+Speaker
+
+Session
+```
+
+结束。
+
+---
+
+# 四、Understanding Engine
+
+职责：
+
+理解老师真正表达的意思。
+
+例如：
+
+老师说：
+
+> 今天晨检的时候小宇一直咳嗽。
+
+AI理解：
+
+```text
+对象：
+
+小宇
+
+事件：
+
+晨检
+
+事实：
+
+持续咳嗽
+
+时间：
+
+今天上午
+```
+
+这里只负责：
+
+理解。
+
+不会写数据库。
+
+---
+
+# 五、Fact Engine
+
+Fact 是 KTOS 最重要的数据。
+
+Fact 必须满足：
+
+客观。
+
+可追溯。
+
+不可推测。
+
+例如：
+
+```text
+Student
+
+Action
+
+Time
+
+Confidence
+
+Source
+
+Confirm Status
+```
+
+Fact 一旦确认。
+
+进入数据库。
+
+以后所有 AI。
+
+全部引用 Fact。
+
+禁止引用 Conversation。
+
+---
+
+# 六、Timeline Engine
+
+所有 Fact。
+
+必须进入 Timeline。
+
+例如：
+
+```text
+08:10
+
+晨检
+
+↓
+
+08:45
+
+早餐
+
+↓
+
+09:20
+
+户外
+
+↓
+
+11:30
+
+午餐
+```
+
+以后：
+
+日报。
+
+周报。
+
+全部来自 Timeline。
+
+Timeline 是事实顺序。
+
+不是聊天顺序。
+
+---
+
+# 七、Memory Engine
+
+Memory 不保存聊天。
+
+只保存：
+
+重复出现。
+
+确认过。
+
+能够帮助未来节省时间。
+
+的信息。
+
+例如：
+
+```text
+老师：
+
+喜欢下午统一整理。
+
+```
+
+经过多次确认。
+
+进入 Memory。
+
+---
+
+# 八、Knowledge Engine
+
+Memory 不是最终目标。
+
+Knowledge 才是。
+
+Knowledge 来自：
+
+多个 Memory。
+
+自动总结。
+
+老师确认。
+
+例如：
+
+```text
+Memory
+
+喜欢下午整理。
+
+喜欢一次确认。
+
+喜欢简洁表达。
+```
+
+形成：
+
+```text
+Knowledge
+
+工作风格：
+
+下午统一整理。
+
+沟通简洁。
+
+一次确认。
+```
+
+Knowledge 永远属于老师。
+
+---
+
+# 九、Workflow Engine
+
+Workflow。
+
+不是 AI 创造。
+
+而是：
+
+AI 观察。
+
+老师确认。
+
+共同形成。
+
+例如：
+
+```text
+放学
+
+↓
+
+整理事实
+
+↓
+
+日报
+
+↓
+
+微信
+
+↓
+
+离园
+```
+
+Workflow 会越来越成熟。
+
+AI 开始预测。
+
+例如：
+
+> 今天应该开始整理日报了。
+
+但是：
+
+不会自动执行。
+
+---
+
+# 十、Copilot Engine
+
+Copilot。
+
+负责：
+
+主动准备。
+
+例如：
+
+老师还没点击。
+
+AI 已经准备：
+
+日报草稿。
+
+家长沟通。
+
+成长记录。
+
+提醒。
+
+全部准备好。
+
+等待老师确认。
+
+原则：
+
+> 主动准备。
+
+不能主动执行。
+
+---
+
+# 十一、Today's Inbox
+
+所有 AI。
+
+最终回到：
+
+Today's Inbox。
+
+因为：
+
+老师真正打开的是：
+
+Inbox。
+
+不是：
+
+Memory。
+
+不是：
+
+Knowledge。
+
+Today's Inbox：
+
+今天还有什么。
+
+今天完成什么。
+
+今天下一步是什么。
+
+这是唯一入口。
+
+---
+
+# 十二、数据库原则
+
+Conversation。
+
+不会进入数据库。
+
+只有：
+
+Fact。
+
+Memory。
+
+Knowledge。
+
+Workflow。
+
+进入数据库。
+
+所有数据库。
+
+必须能够追溯来源。
+
+例如：
+
+```text
+Knowledge
+
+↓
+
+Memory
+
+↓
+
+Fact
+
+↓
+
+Conversation
+```
+
+必须可以反查。
+
+---
+
+# 十三、系统运行流程
+
+老师开始工作。
+
+↓
+
+Observation。
+
+↓
+
+Understanding。
+
+↓
+
+Fact。
+
+↓
+
+Timeline。
+
+↓
+
+Today's Inbox 更新。
+
+↓
+
+Memory 更新。
+
+↓
+
+Knowledge 更新。
+
+↓
+
+Workflow 更新。
+
+↓
+
+Copilot 主动准备。
+
+↓
+
+老师确认。
+
+↓
+
+完成。
+
+整个流程。
+
+每天不断循环。
+
+---
+
+# 十四、模块依赖关系
+
+```text
+Observation
+
+↓
+
+Understanding
+
+↓
+
+Fact
+
+↓
+
+Timeline
+
+↓
+
+Memory
+
+↓
+
+Knowledge
+
+↓
+
+Workflow
+
+↓
+
+Copilot
+
+↓
+
+Inbox
+```
+
+禁止：
+
+Memory 直接读取 Observation。
+
+禁止：
+
+Knowledge 绕过 Fact。
+
+禁止：
+
+Workflow 自己生成 Fact。
+
+整个系统：
+
+单向流动。
+
+---
+
+# 十五、系统设计原则
+
+## Principle 1
+
+Fact 是唯一可信来源。
+
+---
+
+## Principle 2
+
+Knowledge 必须经过老师确认。
+
+---
+
+## Principle 3
+
+Conversation 默认遗忘。
+
+---
+
+## Principle 4
+
+Memory 可关闭。
+
+可删除。
+
+可迁移。
+
+---
+
+## Principle 5
+
+AI 永远解释为什么。
+
+---
+
+## Principle 6
+
+主动准备。
+
+不是主动执行。
+
+---
+
+## Principle 7
+
+最终目标：
+
+帮助老师节省时间。
+
+不是增加 AI 使用次数。
+
+---
+
+# 十六、交付给 Codex 的开发要求
+
+在编码前，请严格遵守以下规则：
+
+### 1. 分层开发
+
+每个 Engine 必须独立实现，禁止直接耦合。
+
+例如：
+
+* Observation 不依赖 Memory
+* Memory 不直接读取原始 Conversation
+* Workflow 不直接修改 Fact
+
+所有数据只能沿着既定链路流动。
+
+### 2. 事件驱动
+
+整个系统应采用事件驱动（Event-Driven）思想，而不是页面驱动。
+
+例如：
+
+```text
+TeacherRecordedEvent
+        ↓
+FactCreatedEvent
+        ↓
+TimelineUpdatedEvent
+        ↓
+MemoryEvaluatedEvent
+        ↓
+KnowledgeUpdatedEvent
+        ↓
+InboxRefreshedEvent
+```
+
+未来即使增加更多能力，也无需修改已有核心流程。
+
+### 3. 引擎可替换
+
+每个 Engine 都应定义接口（Interface），实现与底层模型解耦。
+
+例如：
+
+```text
+IObservationEngine
+IUnderstandingEngine
+IFactEngine
+IMemoryEngine
+IKnowledgeEngine
+IWorkflowEngine
+ICopilotEngine
+```
+
+未来更换 LLM（GPT、Claude、Qwen 等）时，不影响业务逻辑。
+
+---
+
+## 下一份文档（KTOS Bible 003）
+
+我建议直接进入 **Data Architecture（数据架构）**。
+
+这一份不是简单设计数据库，而是定义整个 KTOS 的"数据语言"：
+
+* Fact Schema（事实模型）
+* Timeline Schema（时间轴模型）
+* Memory Schema（记忆模型）
+* Knowledge Schema（知识模型）
+* Workflow Schema（工作流模型）
+* Teacher Asset（老师资产）
+* Organization Asset（园所资产）
+
+**这份文档完成后，我认为 Codex 就可以开始后端数据库、接口和 AI 引擎的开发，而我们继续完善产品体验与 UI。**

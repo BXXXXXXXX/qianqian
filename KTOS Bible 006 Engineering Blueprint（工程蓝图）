@@ -1,0 +1,416 @@
+我准备开始 **Bible 006**，但在开始之前，我想告诉你一件事情。
+
+**我觉得我们的方向需要调整一下。**
+
+不是推翻。
+
+而是升级。
+
+---
+
+## 我重新看了一遍我们已经写的五份 Bible。
+
+目前：
+
+Bible 001~005
+
+大约有 **80~100 页**。
+
+如果我是 Codex。
+
+我会认真阅读。
+
+但是。
+
+**我仍然不知道第一天应该先写什么代码。**
+
+也就是说：
+
+**我们已经完成了产品设计。**
+
+但是还没有完成：
+
+> **工程设计（Engineering Design）**
+
+这是两件完全不同的事情。
+
+---
+
+# 我建议 Bible 006 不再继续讲理念。
+
+而是真正告诉 Codex：
+
+> **今天开始写什么。**
+
+这是以后真正指导开发的文档。
+
+---
+
+# 我建议 Bible 006 改名
+
+不是：
+
+Engineering Specification
+
+而是：
+
+# KTOS Bible 006
+
+## Engineering Blueprint（工程蓝图）
+
+这是我认为整个项目真正进入开发的标志。
+
+---
+
+里面不会写：
+
+AI 应该温暖。
+
+不会写：
+
+帮助老师成长。
+
+因为这些已经 Frozen。
+
+Bible006 开始。
+
+全部都是：
+
+> **代码。**
+
+例如：
+
+---
+
+# 第一章
+
+Repository
+
+```text
+apps/
+
+mobile/
+
+backend/
+
+packages/
+
+shared/
+
+prompt/
+
+infra/
+
+docs/
+```
+
+---
+
+# 第二章
+
+DDD
+
+```text
+core/
+
+fact/
+
+memory/
+
+workflow/
+
+teacher/
+
+student/
+```
+
+---
+
+# 第三章
+
+API
+
+```text
+POST /record
+
+↓
+
+Fact
+
+↓
+
+Timeline
+
+↓
+
+Return Suggestion
+```
+
+---
+
+# 第四章
+
+EventBus
+
+```text
+TeacherRecordEvent
+
+↓
+
+FactCreated
+
+↓
+
+TimelineUpdated
+
+↓
+
+InboxUpdated
+```
+
+---
+
+# 第五章
+
+State Machine
+
+例如：
+
+```text
+Recording
+
+↓
+
+Understanding
+
+↓
+
+Confirm
+
+↓
+
+Fact Saved
+
+↓
+
+Memory Check
+
+↓
+
+Inbox Refresh
+```
+
+---
+
+# 第六章
+
+Prompt Pipeline
+
+Observation Prompt
+
+↓
+
+Fact Prompt
+
+↓
+
+Report Prompt
+
+↓
+
+Memory Prompt
+
+全部拆开。
+
+---
+
+# 第七章
+
+数据库 Migration
+
+第一张表是什么。
+
+第二张表是什么。
+
+第三张表是什么。
+
+全部确定。
+
+---
+
+# 第八章
+
+第一周开发 Checklist
+
+例如：
+
+Day1
+
+登录
+
+Day2
+
+Inbox
+
+Day3
+
+Record
+
+Day4
+
+Fact
+
+Day5
+
+Timeline
+
+Codex 每天下班。
+
+都知道自己做到哪。
+
+---
+
+# 第九章
+
+Definition of Done（DoD）
+
+例如：
+
+Fact Engine 完成。
+
+标准是什么。
+
+不是：
+
+代码能运行。
+
+而是：
+
+老师能完成一次记录。
+
+---
+
+# 第十章
+
+MVP
+
+哪些必须做。
+
+哪些以后做。
+
+全部列出来。
+
+---
+
+## 这是我现在最大的建议。
+
+**不要再继续写偏产品的 Bible。**
+
+因为：
+
+**产品已经 Frozen。**
+
+从 Bible006 开始。
+
+我们应该全部变成：
+
+> **真正可以开发的软件工程文档。**
+
+---
+
+# 我还有一个更大的建议（也是今天最重要的一件事）
+
+我建议我们停止使用：
+
+> Bible
+
+这个名字。
+
+因为。
+
+Bible 更适合产品。
+
+真正开发。
+
+应该开始使用：
+
+# KTOS RFC（Request For Comments）
+
+这是很多大型开源项目的方式。
+
+例如：
+
+```
+RFC-001
+Project Foundation
+
+RFC-002
+Architecture
+
+RFC-003
+Fact Engine
+
+RFC-004
+Memory Engine
+
+RFC-005
+Inbox
+
+RFC-006
+Record
+
+RFC-007
+Timeline
+```
+
+为什么？
+
+因为 RFC 是可以讨论、可以演进、可以冻结的工程规范。
+
+以后：
+
+Codex 提 PR。
+
+我们讨论。
+
+RFC 修改。
+
+整个项目会非常规范。
+
+---
+
+## 我建议我们从这里开始正式进入工程阶段。
+
+到目前为止，我认为我们的整体进度如下：
+
+| 模块                       |      完成度 |
+| ------------------------ | -------: |
+| 产品理念（Vision）             |   100% ✅ |
+| 产品哲学（Constitution）       |   100% ✅ |
+| 核心架构（Core Engine）        |   100% ✅ |
+| 数据架构（Data Architecture）  |    95% ✅ |
+| AI 交互（AI Interaction）    |    95% ✅ |
+| 产品体验（Product Experience） |    90% ✅ |
+| 工程架构（Engineering）        | **0% ⏳** |
+| UI 设计系统                  |      10% |
+| 前端开发                     |       0% |
+| 后端开发                     |       0% |
+| AI 引擎实现                  |       0% |
+
+---
+
+## 我建议从今天开始，我们改变工作方式。
+
+我们不再写"理念文档"。
+
+而是：
+
+**我来担任系统架构师（System Architect）。**
+
+你继续担任产品负责人（Product Owner）。
+
+Codex 担任开发负责人（Lead Engineer）。
+
+以后我们输出的每一份文档，都应该能够让 Codex **当天开始编码，而不是继续理解产品**。
+
+**这是我认为整个 KTOS 项目，从"产品构想"进入"软件工程"的真正分界点。**

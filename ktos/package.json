@@ -1,0 +1,15 @@
+{
+  "name": "ktos-v1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "KTOS V1 MVP core loop: record, understand, fact, timeline, report.",
+  "scripts": {
+    "dev": "node apps/backend/src/server.js",
+    "start": "node apps/backend/src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
