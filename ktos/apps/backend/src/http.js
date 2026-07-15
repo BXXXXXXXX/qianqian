@@ -1,3 +1,5 @@
+import fs from "node:fs";
+
 export async function readJsonBody(req) {
   const chunks = [];
   for await (const chunk of req) {
@@ -30,6 +32,33 @@ export function sendError(res, error) {
   json(res, error.statusCode ?? 500, {
     error: error.message ?? "Unexpected error."
   });
+}
+
+export function staticFile(res, fileUrl) {
+  const filePath = fileUrl.pathname;
+  if (!fs.existsSync(fileUrl)) {
+    return notFound(res);
+  }
+
+  const contentType = contentTypeFor(filePath);
+  res.writeHead(200, { "Content-Type": contentType });
+  res.end(fs.readFileSync(fileUrl));
+}
+
+function contentTypeFor(filePath) {
+  if (filePath.endsWith(".html")) {
+    return "text/html; charset=utf-8";
+  }
+
+  if (filePath.endsWith(".css")) {
+    return "text/css; charset=utf-8";
+  }
+
+  if (filePath.endsWith(".js")) {
+    return "text/javascript; charset=utf-8";
+  }
+
+  return "application/octet-stream";
 }
 
 export function route(req, method, pattern) {

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KTOS V1</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section id="welcome" class="welcome">
+        <p class="eyebrow">KTOS V1</p>
+        <h1>早上好，老师。</h1>
+        <p class="subtitle">今天也一起轻松完成工作。</p>
+        <button id="startWorkButton" class="primary-button">开始今天工作</button>
+      </section>
+
+      <section id="inbox" class="inbox hidden" aria-label="Today's Inbox">
+        <header class="inbox-header">
+          <div>
+            <p class="eyebrow">Today's Inbox</p>
+            <h1>今天</h1>
+          </div>
+          <div class="time-returned">
+            <span id="savedMinutes">0</span>
+            <small>预计节省分钟</small>
+          </div>
+        </header>
+
+        <section class="summary-grid" aria-label="今日概览">
+          <article class="summary-card">
+            <span id="recordCount">0</span>
+            <small>今日记录</small>
+          </article>
+          <article class="summary-card">
+            <span id="pendingCount">0</span>
+            <small>待确认</small>
+          </article>
+          <article class="summary-card">
+            <span id="reportStatus">未生成</span>
+            <small>今日日报</small>
+          </article>
+        </section>
+
+        <section class="suggestions" aria-label="AI 建议">
+          <h2>AI 建议</h2>
+          <div id="suggestionList" class="suggestion-list"></div>
+        </section>
+
+        <section class="record-panel" aria-label="开始记录">
+          <p id="recordHint">按住说话，松开后我会整理成事实卡片。</p>
+          <button id="pressToTalkButton" class="record-button" aria-pressed="false">
+            <span>按住说话</span>
+          </button>
+          <p id="transcriptPreview" class="transcript" aria-live="polite"></p>
+          <label class="quick-input">
+            <span>演示文字</span>
+            <textarea id="recordText" rows="3">今天晨检小宇有点咳嗽，媛媛今天心情很好。</textarea>
+          </label>
+        </section>
+
+        <section class="fact-section" aria-label="待确认 Fact">
+          <h2>Fact Card</h2>
+          <div id="factCards" class="fact-list"></div>
+        </section>
+
+        <section class="timeline-section" aria-label="今日时间轴">
+          <h2>今日时间轴</h2>
+          <div id="timelineList" class="timeline-list"></div>
+        </section>
+
+        <section class="report-section" aria-label="今日日报">
+          <h2>今日日报</h2>
+          <button id="reportButton" class="secondary-button">生成日报草稿</button>
+          <div id="reportDraft" class="report-draft"></div>
+        </section>
+
+        <section class="unlock-panel" aria-label="未来能力">
+          <h2>未来能力</h2>
+          <p>Memory、Workflow、Automation 暂未开启。先把今天的记录变轻。</p>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

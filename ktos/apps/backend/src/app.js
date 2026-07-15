@@ -1,6 +1,8 @@
 import { createKtosLoop } from "../../../packages/domain/src/ktosLoop.js";
 import { JsonStore } from "../../../packages/domain/src/storage/JsonStore.js";
-import { json, notFound, readJsonBody, route, sendError } from "./http.js";
+import { json, notFound, readJsonBody, route, sendError, staticFile } from "./http.js";
+
+const webRoot = new URL("../../web/", import.meta.url);
 
 export function createApp(options = {}) {
   const store = options.store ?? new JsonStore(options.storeFile);
@@ -8,6 +10,18 @@ export function createApp(options = {}) {
 
   return async function app(req, res) {
     try {
+      if (req.method === "GET" && req.url === "/") {
+        return staticFile(res, new URL("index.html", webRoot));
+      }
+
+      if (req.method === "GET" && req.url === "/app.js") {
+        return staticFile(res, new URL("app.js", webRoot));
+      }
+
+      if (req.method === "GET" && req.url === "/style.css") {
+        return staticFile(res, new URL("style.css", webRoot));
+      }
+
       if (req.method === "GET" && req.url === "/health") {
         return json(res, 200, { ok: true, service: "ktos-backend" });
       }
